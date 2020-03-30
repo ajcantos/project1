@@ -1,0 +1,55 @@
+h4, h5 {
+  margin-top: 20px; }
+
+.myown-card-margins {
+  margin-bottom: 20px; }
+
+.myown-footer-margins {
+  margin-top: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px; }
+
+td > .myown-book {
+  font-style: italic; }
+
+a {
+  margin-right: 10px;
+}
+
+p .myown-book {
+  font-style: italic;
+  font-weight: bold; }
+
+p .myown-story {
+  font-style: italic;
+  color: darkslategrey; }
+
+h4 {
+  margin-bottom: 20px; }
+
+h5 {
+  margin-bottom: 5px; }
+
+.form-signin-signup {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+#myown-top-title {
+  margin-top: 50px;
+  margin-bottom: 50px; }
+
+#myown-thanks-for-reading {
+  margin-top: 0px;
+  margin-bottom: 0px; }
+
+@media (max-width: 575.98px) {
+  .myown-hide-for-mobile {
+    display: block; } }
+@media (min-width: 576px) {
+  .myown-hide-for-mobile {
+    display: none; } }
+
+/*# sourceMappingURL=style.css.map */
