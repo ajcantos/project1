@@ -35,8 +35,13 @@
                         </li>
                     </ul>
                     <span class="text-muted">
-                        <a href="{{ url_for('register') }}">Register</a>
-                        <a class="btn btn-outline-success" href="{{ url_for('login') }}">Log in</a>
+                        {% if g.user %}
+                            <a>{{ g.user['username'] }}</a>
+                            <a class="btn btn-outline-success" href="{{ url_for('logout') }}">Log out</a>
+                        {% else %}
+                            <a href="{{ url_for('register') }}">Register</a>
+                            <a class="btn btn-outline-success" href="{{ url_for('login') }}">Log in</a>
+                        {% endif %}
                     </span>
                 </div>
               </nav>
