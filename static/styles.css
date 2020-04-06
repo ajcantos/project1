@@ -1,55 +1,60 @@
-h4, h5 {
-  margin-top: 20px; }
-
-.myown-card-margins {
-  margin-bottom: 20px; }
-
-.myown-footer-margins {
-  margin-top: 50px;
-  padding-top: 20px;
-  padding-bottom: 20px; }
-
-td > .myown-book {
-  font-style: italic; }
 
 a {
   margin-right: 10px;
 }
 
-p .myown-book {
-  font-style: italic;
-  font-weight: bold; }
+.myown-header-picture {
+  background-size: cover;
+  background-position: center bottom;
+  height: 400px;
+  color: white;
+}
 
-p .myown-story {
-  font-style: italic;
-  color: darkslategrey; }
-
-h4 {
+.myown-card-margins {
   margin-bottom: 20px; }
 
-h5 {
-  margin-bottom: 5px; }
-
-.form-signin-signup {
+.myown-form-signin-signup {
   width: 100%;
   max-width: 330px;
   padding: 15px;
   margin: auto;
 }
 
-#myown-top-title {
+.myown-footer-margins {
   margin-top: 50px;
-  margin-bottom: 50px; }
+  padding-top: 20px;
+  padding-bottom: 20px; }
 
-#myown-thanks-for-reading {
+.myown-thanks-for-reading {
   margin-top: 0px;
   margin-bottom: 0px; }
 
 @media (max-width: 575.98px) {
-  .myown-hide-for-mobile {
-    display: block; } }
-@media (min-width: 576px) {
-  .myown-hide-for-mobile {
-    display: none; } }
+  .myown-top-title {
+    padding-top: 250px;
+    padding-bottom: 50px;
+  }
 
-/*# sourceMappingURL=style.css.map */
+  .myown-top-title h1 {
+    font-size: 2.5rem;
+  }
+
+  .myown-top-title h2 {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .myown-top-title {
+    padding-top: 150px;
+    padding-bottom: 50px;
+  }
+
+  .myown-top-title h1 {
+    font-size: 4rem;
+  }
+
+  .myown-top-title h2 {
+    font-size: 2rem;
+  }
+}

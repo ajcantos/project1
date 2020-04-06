@@ -1,47 +1,56 @@
 {% extends "template-general.html" %}
 
-{% block title %}
-My favourite writers
-{% endblock %}
+{% block header %}
+<header class="myown-header-picture" style="background-image: url({{ url_for('static', filename='Main-page-picture.jpg') }});">
+    <div class="container text-center myown-top-title">
+        <h1>Look4Books</h1>
+        <h2>What will you read next?</h2>
+    </div>
+</header>
 
-{% block subtitle %}
-These are my all-time favourite writers of short stories.
+
+    <div class="container text-center" id="myown-top-title">
+        <h1>My favourite writers</h1>
+        <small class="lead text-muted">These are my all-time favourite writers of short stories.</small>
+    </div>
 {% endblock %}
 
 {% block body %}
 <!-- Album of writers -->
-<div class="container">
-    <div class="row text-center">
-        <div class="col-md-4 myown-card-margins">
-            <div class="card bg-light">
-                <img class="card-img-top" src="{{ url_for('static', filename='Raymond_Carver_Squared.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Raymond Carver</h5>
-                    <p class="card-text">American short-story writer and poet that belonged to the movements of minimalism and dirty realism.</p>
-                    <a href="carver.html" class="btn btn-outline-primary">Biography</a>
+</section>
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 myown-card-margins">
+                <div class="card bg-light">
+                    <img class="card-img-top" src="{{ url_for('static', filename='Raymond_Carver_Squared.jpg') }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Raymond Carver</h5>
+                        <p class="card-text">American short-story writer and poet that belonged to the movements of minimalism and dirty realism.</p>
+                        <a href="carver.html" class="btn btn-outline-primary">Biography</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 myown-card-margins">
-            <div class="card bg-light">
-                <img class="card-img-top" src="{{ url_for('static', filename='William_Faulkner_Squared.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">William Faulkner</h5>
-                    <p class="card-text">American writer and Nobel Prize laureate. Most of his novels and short stories are set in the fictional Yoknapatawpha County, based on Mississippi</p>
-                    <a href="faulkner.html" class="btn btn-outline-primary">Biography</a>
+            <div class="col-md-4 myown-card-margins">
+                <div class="card bg-light">
+                    <img class="card-img-top" src="{{ url_for('static', filename='William_Faulkner_Squared.jpg') }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">William Faulkner</h5>
+                        <p class="card-text">American writer and Nobel Prize laureate. Most of his novels and short stories are set in the fictional Yoknapatawpha County, based on Mississippi</p>
+                        <a href="faulkner.html" class="btn btn-outline-primary">Biography</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 myown-card-margins">
-            <div class="card bg-light">
-                <img class="card-img-top" src="{{ url_for('static', filename='Truman_Capote_Squared.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Truman Capote</h5>
-                    <p class="card-text">American novelist and short story writer. His works have been adapted into more than 20 films and television dramas.</p>
-                    <a href="capote.html" class="btn btn-outline-primary">Biography</a>
+            <div class="col-md-4 myown-card-margins">
+                <div class="card bg-light">
+                    <img class="card-img-top" src="{{ url_for('static', filename='Truman_Capote_Squared.jpg') }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Truman Capote</h5>
+                        <p class="card-text">American novelist and short story writer. His works have been adapted into more than 20 films and television dramas.</p>
+                        <a href="capote.html" class="btn btn-outline-primary">Biography</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
