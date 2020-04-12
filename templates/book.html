@@ -1,0 +1,24 @@
+{% extends "template-general.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block body %}
+</section>
+    {% if error %}
+    <div class="container alert alert-warning" role="alert">
+        {{ error }}
+    </div>
+    {% else %}
+    <div class="container">
+        <div class="jumbotron myown-jumbotron-margins">
+            <h1 class="display-4">{{ book.title }}</h1>
+            <p class="lead">{{ book.author }}</p>
+            <hr class="my-4">
+            <p>Publication year: {{ book.year }}</p>
+            <p>ISBN: {{ book.isbn }}</p>
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}  

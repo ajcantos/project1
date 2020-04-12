@@ -22,13 +22,22 @@
     {% endif %}
 
     <div class="container text-center">
-        <form class="myown-form-signin-signup" method="post">
-            <label for="username" class="sr-only">Username</label>
-            <input type="text" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Register" style="margin-top: 5px;">
+        <form class="myown-form-search" method="post">
+            <label for="search" class="sr-only">Search books</label>
+            <input type="text" name="search" id="search" class="form-control" placeholder="Search books" required autofocus>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Search" style="margin-top: 5px;">
         </form>
     </div>
+
+    {% if books %}
+    <div class="container">
+        <h1>Your results:</h1>
+        <ol>
+            {% for book in books %}
+                <li><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.title }}, {{ book.author }}</a></li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% endif %}
 </section>
-{% endblock %}  
+{% endblock %}

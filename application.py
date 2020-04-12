@@ -52,6 +52,36 @@ def credentials_are_valid(username, password):
         valid = True
     return valid
 
+def get_book_by_isbn(isbn):
+    book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+    return book
+
+def split_search_parameters(search_parameters):
+    search_keywords = list()
+    search_parameters_clean = search_parameters.strip()
+    if search_parameters_clean:
+        parameters = search_parameters_clean.split()
+    for parameter in parameters:
+        search_keywords.append(parameter)
+        search_keywords.append(parameter.lower())
+        search_keywords.append(parameter.upper())
+        search_keywords.append(parameter.capitalize())
+    # Remove duplicates
+    search_keywords = list(dict.fromkeys(search_keywords))
+    return search_keywords
+
+def search_for_books_by_keyword(search_keyword):
+    search_keyword = "%" + search_keyword + "%"
+    books = db.execute("SELECT * FROM books WHERE isbn LIKE :soft_isbn OR title LIKE :soft_title OR author LIKE :soft_author", {"soft_isbn": search_keyword, "soft_title": search_keyword, "soft_author": search_keyword}).fetchall()
+    return books
+
+def search_for_books(search_parameters):
+    books = list()
+    search_keywords = split_search_parameters(search_parameters)
+    for search_keyword in search_keywords:
+        books = books + search_for_books_by_keyword(search_keyword)
+    return books
+
 
 @app.before_request
 def load_logged_in_user():
@@ -107,7 +137,7 @@ def login():
             error = f'Invalid credentials for user {username}.'
             print(error)
 
-        # If they are valid, then...
+        # If they are valid then...
         if error is None:
             session.clear()
              # Init session
@@ -121,7 +151,52 @@ def login():
 @app.route('/search', methods=('GET', 'POST'))
 def search():
     error = None
-    return render_template('search.html', error=error)
+    books = None
+    if request.method == 'POST':
+        # Obtain the search parameters from the form
+        search_parameters = request.form['search']
+
+        # Look for them in the data base
+        books = search_for_books(search_parameters)
+
+        # Check if user is logged in
+        if g.user is None:
+            error = f'Your are not logged in.'
+            print(error)
+        # Check if book exists
+        elif len(books) == 0:
+            error = f'Book not found.'
+            print(error)
+        else:
+            for book in books:
+                print(f'Found book: {book.title}.')
+
+    if request.method == 'GET':
+        # Check if user is logged in
+        if g.user is None:
+            error = f'Your are not logged in.'
+            print(error)
+
+    return render_template('search.html', books=books, error=error)
+
+@app.route('/book/<string:isbn>', methods=('GET', 'POST'))
+def book(isbn):
+    error = None
+
+    # Attempt to get book from DB
+    book = get_book_by_isbn(isbn)
+
+    # Check if user is logged in
+    if g.user is None:
+        error = f'Your are not logged in.'
+        print(error)
+    # Check if book exists
+    elif book is None:
+        error = f'Invalid isbn {isbn}.'
+        print(error)
+
+    # If it exists then...
+    return render_template('book.html', book=book, error=error)
 
 @app.route('/logout')
 def logout():

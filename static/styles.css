@@ -11,13 +11,25 @@ a {
 }
 
 .myown-card-margins {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+}
 
 .myown-form-signin-signup {
   width: 100%;
   max-width: 330px;
   padding: 15px;
   margin: auto;
+}
+
+.myown-form-search {
+  width: 100%;
+  max-width: 600px;
+  padding: 15px;
+  margin: auto;
+}
+
+.myown-jumbotron-margins{
+  margin-top: 20px; 
 }
 
 .myown-footer-margins {
