@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+<!-- Book card -->
 </section>
     {% if error %}
     <div class="container alert alert-warning" role="alert">
@@ -21,4 +22,53 @@
     </div>
     {% endif %}
 </section>
+
+{% if reviews %}
+<!-- Book reviews -->
+<section class="write-review py-5 bg-light" id="write-review">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                <div class="col-md-6">
+                    <h5>Overall rating</h5>
+                </div>
+                <div class="col-md-6 text-warning">
+                {% for i in range(get_average_full_stars(reviews)) %}
+                    <i class="fa fa-star"></i>
+                {% endfor %}
+                {% for i in range(get_average_half_stars(reviews)) %}
+                    <i class="fa fa-star-half-o"></i>
+                {% endfor %}
+                {% for i in range(get_average_empty_stars(reviews)) %}
+                    <i class="fa fa-star-o"></i>
+                {% endfor %}
+                </div>
+            </div>
+            <hr>
+            {% for review in reviews %}
+            <div class="row">
+                <div class="col-md-6">
+                    <p>{{ review.username }}</p>
+                </div>
+                <div class="col-md-6 text-warning">
+                {% for i in range(review.rating) %}
+                    <i class="fa fa-star"></i>
+                {% endfor %}
+                {% for i in range(5-review.rating) %}
+                    <i class="fa fa-star-o"></i>
+                {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <hr>
+            <div class="row pt-3">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-primary">Write a review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}  

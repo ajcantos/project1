@@ -1,4 +1,5 @@
 import os
+import math
 
 from flask import Flask, session, g, render_template, request, redirect, url_for
 from flask_session import Session
@@ -81,6 +82,40 @@ def search_for_books(search_parameters):
     for search_keyword in search_keywords:
         books = books + search_for_books_by_keyword(search_keyword)
     return books
+
+def get_book_reviews(book_id):
+    reviews = db.execute("SELECT * FROM reviews INNER JOIN users ON users.id = reviews.user_id WHERE book_id = :book_id", {"book_id": book_id}).fetchall()
+    return reviews
+
+def get_average_stars(reviews):
+    average = 0
+    for review in reviews:
+        average += review.rating
+    average = average/len(reviews)
+    fraction, whole = math.modf(average)
+    if fraction < 0.1:
+        full_stars = int(whole)
+        half_stars = 0
+    elif fraction > 0.9:
+        full_stars = int(whole) + 1
+        half_stars = 0
+    else:
+        full_stars = int(whole)
+        half_stars = 1
+    empty_stars = 5 - full_stars - half_stars
+    return full_stars, half_stars, empty_stars
+
+def get_average_full_stars(reviews):
+    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+    return full_stars
+
+def get_average_half_stars(reviews):
+    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+    return half_stars
+
+def get_average_empty_stars(reviews):
+    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+    return empty_stars
 
 
 @app.before_request
@@ -196,7 +231,20 @@ def book(isbn):
         print(error)
 
     # If it exists then...
-    return render_template('book.html', book=book, error=error)
+    reviews = get_book_reviews(book.id)
+
+    for review in reviews:
+        print(f'Book_id: {review.book_id}')
+        print(f'Username: {review.username}')
+        print(f'Rating: {review.rating}')
+
+    return render_template('book.html',
+                            get_average_full_stars=get_average_full_stars,
+                            get_average_half_stars=get_average_half_stars,
+                            get_average_empty_stars=get_average_empty_stars,
+                            book=book,
+                            reviews=reviews,
+                            error=error)
 
 @app.route('/logout')
 def logout():
