@@ -89,9 +89,10 @@ def get_book_reviews(book_id):
 
 def get_average_stars(reviews):
     average = 0
-    for review in reviews:
-        average += review.rating
-    average = average/len(reviews)
+    if len(reviews) > 0:
+        for review in reviews:
+            average += review.rating
+        average = average/len(reviews)
     fraction, whole = math.modf(average)
     if fraction < 0.1:
         full_stars = int(whole)
@@ -117,12 +118,22 @@ def get_average_empty_stars(reviews):
     full_stars, half_stars, empty_stars = get_average_stars(reviews)
     return empty_stars
 
+def get_number_of_reviews(reviews):
+    return len(reviews)
+
+def user_already_submitted_review(user_id, reviews):
+    return False
+
+def store_review(book_id, user_id, rating, comment):
+    db.execute("INSERT INTO reviews (book_id, user_id, rating, comment) VALUES (:book_id, :user_id, :rating, :comment)", {"book_id": book_id, "user_id": user_id, "rating": rating, "comment": comment})
+    db.commit()
+    return
+
 
 @app.before_request
-def load_logged_in_user():
+def load_logged_in_user():   
+    # If no-one is logged in
     user_id = session.get('user_id')
-    
-    # If no-one is looged in
     if user_id is None:
         g.user = None
     # If someone is logged in, then load their info
@@ -135,7 +146,9 @@ def index():
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
+    # Initialize variables
     error = None
+
     if request.method == 'POST':
         # Obtain the username and passowrd from the form
         username = request.form['username']
@@ -161,7 +174,9 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Initialize variables
     error = None
+
     if request.method == 'POST':
         # Obtain the username and password from the form
         username = request.form['username']
@@ -185,8 +200,10 @@ def login():
 
 @app.route('/search', methods=('GET', 'POST'))
 def search():
+    # Initialize variables
     error = None
     books = None
+    
     if request.method == 'POST':
         # Obtain the search parameters from the form
         search_parameters = request.form['search']
@@ -216,12 +233,14 @@ def search():
 
 @app.route('/book/<string:isbn>', methods=('GET', 'POST'))
 def book(isbn):
+    # Initialize variables
     error = None
+    reviews = None
 
     # Attempt to get book from DB
     book = get_book_by_isbn(isbn)
 
-    # Check if user is logged in
+   # Check if user is logged in
     if g.user is None:
         error = f'Your are not logged in.'
         print(error)
@@ -230,21 +249,42 @@ def book(isbn):
         error = f'Invalid isbn {isbn}.'
         print(error)
 
-    # If it exists then...
-    reviews = get_book_reviews(book.id)
+    # If everything is OK then...
+    if error is None:
+        reviews = get_book_reviews(book.id)
 
-    for review in reviews:
-        print(f'Book_id: {review.book_id}')
-        print(f'Username: {review.username}')
-        print(f'Rating: {review.rating}')
+    if request.method == 'POST':
+        # Obtain the review parameters from the form
+        rating = request.form['rating']
+        comment = request.form['comment']
+
+        # Check if comment is too short
+        if len(comment) == 0:
+            error = f'You must enter a comment.'
+            print(error)
+        # Check if user already has submitted a review
+        elif user_already_submitted_review(g.user.id, reviews):
+            error = f'You already submitted a review for this book.'
+            print(error)
+
+        # If everything is OK then...
+        if error is None:
+            # Store in DB
+            store_review(book.id, g.user.id, rating, comment)
+            return redirect(url_for('review'))
 
     return render_template('book.html',
                             get_average_full_stars=get_average_full_stars,
                             get_average_half_stars=get_average_half_stars,
                             get_average_empty_stars=get_average_empty_stars,
+                            get_number_of_reviews=get_number_of_reviews,
                             book=book,
                             reviews=reviews,
                             error=error)
+
+@app.route('/review')
+def review():
+    return render_template('review.html')
 
 @app.route('/logout')
 def logout():

@@ -5,70 +5,91 @@
 
 {% block body %}
 <!-- Book card -->
-</section>
+<section>
     {% if error %}
     <div class="container alert alert-warning" role="alert">
         {{ error }}
     </div>
-    {% else %}
+    {% endif %}
+    {% if book %}
     <div class="container">
         <div class="jumbotron myown-jumbotron-margins">
             <h1 class="display-4">{{ book.title }}</h1>
             <p class="lead">{{ book.author }}</p>
             <hr class="my-4">
-            <p>Publication year: {{ book.year }}</p>
-            <p>ISBN: {{ book.isbn }}</p>
+            <p class="lead">Publication year: {{ book.year }}</p>
+            <p class="lead">ISBN: {{ book.isbn }}</p>
+            <h5>Average user rating:
+            {% for i in range(get_average_full_stars(reviews)) %}
+                <i class="text-warning fa fa-star"></i>
+            {% endfor %}
+            {% for i in range(get_average_half_stars(reviews)) %}
+                <i class="text-warning fa fa-star-half-o"></i>
+            {% endfor %}
+            {% for i in range(get_average_empty_stars(reviews)) %}
+                <i class="text-warning fa fa-star-o"></i>
+            {% endfor %}
+            {{ get_number_of_reviews(reviews) }}
+            </h5>
+            <h5>Average rating in Goodreads:
+            {% for i in range(get_average_full_stars(reviews)) %}
+                <i class="text-warning fa fa-star"></i>
+            {% endfor %}
+            {% for i in range(get_average_half_stars(reviews)) %}
+                <i class="text-warning fa fa-star-half-o"></i>
+            {% endfor %}
+            {% for i in range(get_average_empty_stars(reviews)) %}
+                <i class="text-warning fa fa-star-o"></i>
+            {% endfor %}
+            {{ get_number_of_reviews(reviews) }}
+            </h5>
         </div>
     </div>
     {% endif %}
 </section>
 
-{% if reviews %}
 <!-- Book reviews -->
-<section class="write-review py-5 bg-light" id="write-review">
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <div class="row">
-                <div class="col-md-6">
-                    <h5>Overall rating</h5>
-                </div>
-                <div class="col-md-6 text-warning">
-                {% for i in range(get_average_full_stars(reviews)) %}
-                    <i class="fa fa-star"></i>
-                {% endfor %}
-                {% for i in range(get_average_half_stars(reviews)) %}
-                    <i class="fa fa-star-half-o"></i>
-                {% endfor %}
-                {% for i in range(get_average_empty_stars(reviews)) %}
-                    <i class="fa fa-star-o"></i>
-                {% endfor %}
-                </div>
-            </div>
-            <hr>
-            {% for review in reviews %}
-            <div class="row">
-                <div class="col-md-6">
-                    <p>{{ review.username }}</p>
-                </div>
-                <div class="col-md-6 text-warning">
+            <div class="col">
+                {% if reviews %}
+                <h5>Reviews</h5>
+                {% endif %}
+                {% for review in reviews %}
+                <p>{{ review.username }}</p>
+                <p>
                 {% for i in range(review.rating) %}
-                    <i class="fa fa-star"></i>
+                    <i class="text-warning fa fa-star"></i>
                 {% endfor %}
                 {% for i in range(5-review.rating) %}
-                    <i class="fa fa-star-o"></i>
+                    <i class="text-warning fa fa-star-o"></i>
                 {% endfor %}
-                </div>
+                </p>
+                <p>{{ review.comment }}</p>
+                {% endfor %}
             </div>
-            {% endfor %}
-            <hr>
-            <div class="row pt-3">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-primary">Write a review</button>
-                </div>
+            <div class="col">
+                <form class="myown-form-signin-signup" method="post">
+                    <p>Do you want to leave a review?</p>
+                    <div class="form-group">
+                        <label for="rating">Rating</label>
+                        <select name="rating" id="rating" class="form-control" placeholder="Rating">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Comment</label>
+                        <input type="text" name="comment" id="comment" class="form-control" placeholder="Comment" required>
+                    </div>
+                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit" style="margin-top: 5px;">
+                </form>
             </div>
         </div>
     </div>
 </section>
-{% endif %}
 {% endblock %}  
