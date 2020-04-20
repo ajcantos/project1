@@ -1,7 +1,8 @@
 import os
 import math
+import requests
 
-from flask import Flask, session, g, render_template, request, redirect, url_for
+from flask import Flask, session, g, render_template, jsonify, request, redirect, url_for
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
@@ -9,9 +10,11 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
 
-# Check for environment variable
+# Check for environment variables
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
+if not os.getenv("GOODREADS_KEY"):
+    raise RuntimeError("GOODREADS_KEY is not set")
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
@@ -22,6 +25,8 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+# Get the Goodreads key
+goodreads_key = os.getenv("GOODREADS_KEY")
 
 def get_user_by_name(username):
     user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
@@ -87,12 +92,16 @@ def get_book_reviews(book_id):
     reviews = db.execute("SELECT * FROM reviews INNER JOIN users ON users.id = reviews.user_id WHERE book_id = :book_id", {"book_id": book_id}).fetchall()
     return reviews
 
-def get_average_stars(reviews):
+def get_average_review(reviews):
     average = 0
     if len(reviews) > 0:
         for review in reviews:
             average += review.rating
         average = average/len(reviews)
+    return average
+
+def get_average_stars(average):
+    average = float(average)
     fraction, whole = math.modf(average)
     if fraction < 0.1:
         full_stars = int(whole)
@@ -106,23 +115,35 @@ def get_average_stars(reviews):
     empty_stars = 5 - full_stars - half_stars
     return full_stars, half_stars, empty_stars
 
-def get_average_full_stars(reviews):
-    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+def get_average_full_stars(average):
+    full_stars, half_stars, empty_stars = get_average_stars(average)
     return full_stars
 
-def get_average_half_stars(reviews):
-    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+def get_average_half_stars(average):
+    full_stars, half_stars, empty_stars = get_average_stars(average)
     return half_stars
 
-def get_average_empty_stars(reviews):
-    full_stars, half_stars, empty_stars = get_average_stars(reviews)
+def get_average_empty_stars(average):
+    full_stars, half_stars, empty_stars = get_average_stars(average)
     return empty_stars
 
 def get_number_of_reviews(reviews):
     return len(reviews)
 
 def user_already_submitted_review(user_id, reviews):
-    return False
+    already_reviewed = False
+    for review in reviews:
+        if review.user_id == user_id:
+            already_reviewed = True
+    return already_reviewed
+
+def get_goodreads_book_reviews(isbn):
+    goodreads_reviews = None
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": goodreads_key, "isbns": isbn})
+    if res.status_code == 200:
+        books = res.json()['books']
+        goodreads_reviews = books[0]
+    return goodreads_reviews
 
 def store_review(book_id, user_id, rating, comment):
     db.execute("INSERT INTO reviews (book_id, user_id, rating, comment) VALUES (:book_id, :user_id, :rating, :comment)", {"book_id": book_id, "user_id": user_id, "rating": rating, "comment": comment})
@@ -240,7 +261,7 @@ def book(isbn):
     # Attempt to get book from DB
     book = get_book_by_isbn(isbn)
 
-   # Check if user is logged in
+    # Check if user is logged in
     if g.user is None:
         error = f'Your are not logged in.'
         print(error)
@@ -252,6 +273,7 @@ def book(isbn):
     # If everything is OK then...
     if error is None:
         reviews = get_book_reviews(book.id)
+        goodreads_reviews = get_goodreads_book_reviews(isbn)
 
     if request.method == 'POST':
         # Obtain the review parameters from the form
@@ -277,14 +299,53 @@ def book(isbn):
                             get_average_full_stars=get_average_full_stars,
                             get_average_half_stars=get_average_half_stars,
                             get_average_empty_stars=get_average_empty_stars,
+                            get_average_review=get_average_review,
                             get_number_of_reviews=get_number_of_reviews,
                             book=book,
                             reviews=reviews,
+                            goodreads_reviews=goodreads_reviews,
                             error=error)
 
 @app.route('/review')
 def review():
     return render_template('review.html')
+
+@app.route('/api/book/<string:isbn>')
+def book_api(isbn):
+    # Initialize variables
+    error = None
+    reviews = None
+
+    # Attempt to get book from DB
+    book = get_book_by_isbn(isbn)
+
+    # Check if user is logged in
+    if g.user is None:
+        error = f'Your are not logged in.'
+        print(error)
+    # Check if book exists
+    elif book is None:
+        error = f'Invalid isbn {isbn}.'
+        print(error)
+
+    # If an error occurs
+    if error is not None:
+        return jsonify({"error": error}), 422
+
+    # If everything is OK then...
+    reviews = get_book_reviews(book.id)
+
+    # Build the JSON repy
+    reply = jsonify({
+        "title": book.title,
+        "author": book.author,
+        "year": book.year,
+        "isbn": book.isbn,
+        "review_count": get_number_of_reviews(reviews),
+        "average_score": get_average_review(reviews)
+    })
+    
+    return reply
 
 @app.route('/logout')
 def logout():

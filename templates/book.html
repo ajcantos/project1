@@ -20,28 +20,28 @@
             <p class="lead">Publication year: {{ book.year }}</p>
             <p class="lead">ISBN: {{ book.isbn }}</p>
             <h5>Average user rating:
-            {% for i in range(get_average_full_stars(reviews)) %}
+            {% for i in range(get_average_full_stars(get_average_review(reviews))) %}
                 <i class="text-warning fa fa-star"></i>
             {% endfor %}
-            {% for i in range(get_average_half_stars(reviews)) %}
+            {% for i in range(get_average_half_stars(get_average_review(reviews))) %}
                 <i class="text-warning fa fa-star-half-o"></i>
             {% endfor %}
-            {% for i in range(get_average_empty_stars(reviews)) %}
+            {% for i in range(get_average_empty_stars(get_average_review(reviews))) %}
                 <i class="text-warning fa fa-star-o"></i>
             {% endfor %}
             {{ get_number_of_reviews(reviews) }}
             </h5>
             <h5>Average rating in Goodreads:
-            {% for i in range(get_average_full_stars(reviews)) %}
+            {% for i in range(get_average_full_stars(goodreads_reviews['average_rating'])) %}
                 <i class="text-warning fa fa-star"></i>
             {% endfor %}
-            {% for i in range(get_average_half_stars(reviews)) %}
+            {% for i in range(get_average_half_stars(goodreads_reviews['average_rating'])) %}
                 <i class="text-warning fa fa-star-half-o"></i>
             {% endfor %}
-            {% for i in range(get_average_empty_stars(reviews)) %}
+            {% for i in range(get_average_empty_stars(goodreads_reviews['average_rating'])) %}
                 <i class="text-warning fa fa-star-o"></i>
             {% endfor %}
-            {{ get_number_of_reviews(reviews) }}
+            {{ goodreads_reviews['work_ratings_count'] }}
             </h5>
         </div>
     </div>
