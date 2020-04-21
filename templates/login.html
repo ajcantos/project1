@@ -1,13 +1,13 @@
 {% extends "template-general.html" %}
 
 {% block header %}
-<header>
-    <div class="container text-center myown-top-title">
+<header class="myown-header-picture" style="background-image: url({{ url_for('static', filename='Login-register-page-picture.jpg') }});">
+    <div class="container text-center myown-top-title text-dark" id="myown-top-title">
         <h1>Welcome to Look4Books</h1>
         {% if error %}
-            <small class="lead text-muted">An error occurred, please try again</small>
+            <h2>An error occurred, please try again</h2>
         {% else %}
-            <small class="lead text-muted">Please sign in</small>
+            <h2>Please sign in</h2>
         {% endif %}
     </div>
 </header>
@@ -16,17 +16,17 @@
 {% block body %}
 <section>
     {% if error %}
-    <div class="container alert alert-warning" role="alert">
+    <div class="container alert alert-warning my-3" role="alert">
         {{ error }}
     </div>
     {% endif %}
 
-    <div class="container text-center">
+    <div class="container text-center mt-3 mb-5">
         <form class="myown-form-signin-signup" method="post">
             <label for="username" class="sr-only">Username</label>
             <input type="text" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
             <label for="password" class="sr-only">Password</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+            <input type="password" name="password" id="password" class="form-control mt-1" placeholder="Password" required>
             <input type="submit" class="btn btn-lg btn-primary btn-block" value="Log in" style="margin-top: 5px;">
         </form>
     </div>

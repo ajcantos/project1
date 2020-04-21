@@ -1,3 +1,11 @@
+html {
+  position: relative; /* For sticky footer */
+  min-height: 100%; /* For sticky footer */
+}
+
+body {
+  margin-bottom: 80px; /* For sticky footer */
+}
 
 a {
   margin-right: 10px;
@@ -7,11 +15,6 @@ a {
   background-size: cover;
   background-position: center bottom;
   height: 400px;
-  color: white;
-}
-
-.myown-card-margins {
-  margin-bottom: 20px;
 }
 
 .myown-form-signin-signup {
@@ -28,18 +31,12 @@ a {
   margin: auto;
 }
 
-.myown-jumbotron-margins{
-  margin-top: 20px; 
+.myown-sticky-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
 }
-
-.myown-footer-margins {
-  margin-top: 50px;
-  padding-top: 20px;
-  padding-bottom: 20px; }
-
-.myown-thanks-for-reading {
-  margin-top: 0px;
-  margin-bottom: 0px; }
 
 @media (max-width: 575.98px) {
   .myown-top-title {

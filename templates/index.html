@@ -2,51 +2,54 @@
 
 {% block header %}
 <header class="myown-header-picture" style="background-image: url({{ url_for('static', filename='Main-page-picture.jpg') }});">
-    <div class="container text-center myown-top-title">
+    <div class="container text-center myown-top-title text-light" id="myown-top-title">
         <h1>Look4Books</h1>
         <h2>What will you read next?</h2>
     </div>
 </header>
 
 
-    <div class="container text-center" id="myown-top-title">
-        <h1>My favourite writers</h1>
-        <small class="lead text-muted">These are my all-time favourite writers of short stories.</small>
+    <div class="container text-center mt-4 mb-4">
+        <h1>Today's recommendations</h1>
+        <small class="lead text-muted">Science-fiction all-time classics</small>
     </div>
 {% endblock %}
 
 {% block body %}
-<!-- Album of writers -->
+<!-- Featured books -->
 </section>
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-4 myown-card-margins">
-                <div class="card bg-light">
-                    <img class="card-img-top" src="{{ url_for('static', filename='Raymond_Carver_Squared.jpg') }}" alt="Card image cap">
+            <div class="col-md-4">
+                <div class="card bg-light mb-4">
+                    <img class="card-img-top" src="{{ url_for('static', filename='I-robot.jpg') }}" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">Raymond Carver</h5>
-                        <p class="card-text">American short-story writer and poet that belonged to the movements of minimalism and dirty realism.</p>
-                        <a href="carver.html" class="btn btn-outline-primary">Biography</a>
+                        <h5 class="card-title">I, Robot</h5>
+                        <h6 class="card-title">Issac Assimov</h6>
+                        <p class="card-text">Here are stories of robots gone mad, of mind-read robots, and robots with a sense of humor. Of robot politicians, and robots who secretly run the world--all told with the dramatic blend of science fact and science fiction that has become Asmiov's trademark.</p>
+                        <a href="{{ url_for('book', isbn='0553803700') }}" class="btn btn-outline-primary">See book</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 myown-card-margins">
-                <div class="card bg-light">
-                    <img class="card-img-top" src="{{ url_for('static', filename='William_Faulkner_Squared.jpg') }}" alt="Card image cap">
+            <div class="col-md-4">
+                <div class="card bg-light mb-4">
+                    <img class="card-img-top" src="{{ url_for('static', filename='The-handmaids-tale.jpg') }}" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">William Faulkner</h5>
-                        <p class="card-text">American writer and Nobel Prize laureate. Most of his novels and short stories are set in the fictional Yoknapatawpha County, based on Mississippi</p>
-                        <a href="faulkner.html" class="btn btn-outline-primary">Biography</a>
+                        <h5 class="card-title">The Handmaid's Tale</h5>
+                        <h6 class="card-title">Margaret Atwood</h6>
+                        <p class="card-text">The Handmaid's Tale is a novel of such power that the reader will be unable to forget its images and its forecast. Set in the near future, it describes a monotheocracy that has reacted to social unrest and a sharply declining birthrate. The regime takes the Book of Genesis absolutely at its word, with bizarre consequences for the women and men in its population.</p>
+                        <a href="{{ url_for('book', isbn='038549081X') }}" class="btn btn-outline-primary">See book</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 myown-card-margins">
-                <div class="card bg-light">
-                    <img class="card-img-top" src="{{ url_for('static', filename='Truman_Capote_Squared.jpg') }}" alt="Card image cap">
+            <div class="col-md-4">
+                <div class="card bg-light mb-4">
+                    <img class="card-img-top" src="{{ url_for('static', filename='Fahrenheit-451.jpg') }}" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">Truman Capote</h5>
-                        <p class="card-text">American novelist and short story writer. His works have been adapted into more than 20 films and television dramas.</p>
-                        <a href="capote.html" class="btn btn-outline-primary">Biography</a>
+                        <h5 class="card-title">Fahrenheit 451</h5>
+                        <h6 class="card-title">Ray Bradbury</h6>
+                        <p class="card-text">Sixty years after its originally publication, Ray Bradbury’s internationally acclaimed novel Fahrenheit 451 stands as a classic of world literature set in a bleak, dystopian future. Today its message has grown more relevant than ever before.</p>
+                        <a href="{{ url_for('book', isbn='0307347974') }}" class="btn btn-outline-primary">See book</a>
                     </div>
                 </div>
             </div>

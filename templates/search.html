@@ -1,13 +1,13 @@
 {% extends "template-general.html" %}
 
 {% block header %}
-<header>
-    <div class="container text-center myown-top-title">
+<header class="myown-header-picture" style="background-image: url({{ url_for('static', filename='Login-register-page-picture.jpg') }});">
+    <div class="container text-center myown-top-title" id="myown-top-title">
         <h1>Look4Books</h1>
         {% if error %}
-            <small class="lead text-muted">No results found, please try again</small>
+            <h2>No results found, please try again</h2>
         {% else %}
-            <small class="lead text-muted">Please introduce your search criteria</small>
+            <h2>Please introduce your search criteria</h2>
         {% endif %}
     </div>
 </header>
@@ -16,7 +16,7 @@
 {% block body %}
 </section>
     {% if error %}
-    <div class="container alert alert-warning" role="alert">
+    <div class="container alert alert-warning my-3" role="alert">
         {{ error }}
     </div>
     {% endif %}

@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from os import getenv
+import sys 
 
 # Declare file to import
 reviews_csv_file = 'reviews.csv'
@@ -33,6 +34,12 @@ def split_line(line):
 
 def main():
 
+    # Check arguments
+    if len(sys.argv) > 1:
+        reviews_csv_file = sys.argv[1]
+        book_range_initial = int(sys.argv[2])
+        book_range_final = int(sys.argv[3])
+           
     # Check for environment variable
     if not getenv("DATABASE_URL"):
         raise RuntimeError("DATABASE_URL is not set")
@@ -51,7 +58,7 @@ def main():
             if line_list[0] == 'user_id':
                 print('Inserting the following reviews in the database:')
             else:
-                for book_id in range(1, 5000):
+                for book_id in range(book_range_initial, book_range_final):
                     print(book_id, ': ', line_list)
                     statement = text("""INSERT INTO reviews (book_id, user_id, rating, comment) VALUES (:book_id, :user_id, :rating, :comment)""")
                     db.execute(statement, {"book_id": str(book_id), "user_id": line_list[0], "rating": line_list[1], "comment": line_list[2]})

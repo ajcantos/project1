@@ -94,10 +94,11 @@ def get_book_reviews(book_id):
 
 def get_average_review(reviews):
     average = 0
-    if len(reviews) > 0:
-        for review in reviews:
-            average += review.rating
-        average = average/len(reviews)
+    if reviews:
+        if len(reviews) > 0:
+            for review in reviews:
+                average += review.rating
+            average = average/len(reviews)
     return average
 
 def get_average_stars(average):
@@ -128,7 +129,10 @@ def get_average_empty_stars(average):
     return empty_stars
 
 def get_number_of_reviews(reviews):
-    return len(reviews)
+    number = 0
+    if reviews:
+        number = len(reviews) 
+    return number
 
 def user_already_submitted_review(user_id, reviews):
     already_reviewed = False
@@ -257,6 +261,7 @@ def book(isbn):
     # Initialize variables
     error = None
     reviews = None
+    goodreads_reviews = None
 
     # Attempt to get book from DB
     book = get_book_by_isbn(isbn)
@@ -330,7 +335,7 @@ def book_api(isbn):
 
     # If an error occurs
     if error is not None:
-        return jsonify({"error": error}), 422
+        return jsonify({"error": error}), 404
 
     # If everything is OK then...
     reviews = get_book_reviews(book.id)
